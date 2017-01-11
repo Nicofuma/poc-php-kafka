@@ -16,6 +16,18 @@ services:
     networks:
       - default
 
+  python:
+    build:
+      context: docker/python
+    volumes:
+      - ./python:/data
+    working_dir: /data
+    depends_on:
+      - kafka
+      - schemaregistry
+    networks:
+      - default
+
   zookeeper:
     image: wurstmeister/zookeeper
     ports:

@@ -14,5 +14,6 @@
         "guzzle/guzzle": "^3.9"
     },
     "require-dev": {
+        "kwn/php-rdkafka-stubs": "^0.0.5"
     }
 }

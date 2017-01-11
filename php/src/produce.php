@@ -19,37 +19,21 @@ _JSON
 
 $schema = AvroSchema::parse($schema);
 
-$registry = new CachedSchemaRegistryClient('http://schemaregistry:8081');
-var_dump($registry->register('members', $schema));
-exit;
-
 $jose = ['id' => 1392, 'name' => 'Jose'];
 $maria = ['id' => 1642, 'name' => 'Maria'];
 $data = [$jose, $maria];
-
-$io = new AvroStringIO();
-
-// Create a datum writer object
-$writer = new AvroIODatumWriter($schema);
-$dataWriter = new AvroDataIOWriter($io, $writer, $schema);
-
-foreach ($data as $datum) {
-    $dataWriter->append($datum);
-}
-
-$dataWriter->close();
-$message = $io->string();
 
 $kafka = new \RdKafka\Producer();
 $kafka->setLogLevel(LOG_DEBUG);
 $kafka->addBrokers('kafka');
 
-$topic = $kafka->newTopic('members');
+$topic = new AvroProducer($kafka->newTopic('members'), 'http://schemaregistry:8081', null, $schema);
 
 $nb = isset($argv[1]) ? $argv[1] : 1;
 
 for ($i = 0; $i < $nb ; $i++) {
-    $topic->produce(RD_KAFKA_PARTITION_UA, 0, $message);
+    $topic->produce(RD_KAFKA_PARTITION_UA, 0, $jose);
+    $topic->produce(RD_KAFKA_PARTITION_UA, 0, $maria);
 }
 
 echo "Published\n";

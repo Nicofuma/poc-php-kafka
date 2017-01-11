@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "f1ee17d2ec5f98461c39fc2ae06f1e52",
-    "content-hash": "dd40546a437f14f97dff6f5f59cdd729",
+    "hash": "2dd2c4ca5aeacbff458bf38ae57abcab",
+    "content-hash": "a77b1f1bdb32931a81771e6efdc3305b",
     "packages": [
         {
             "name": "guzzle/guzzle",
@@ -231,7 +231,42 @@
             "time": "2015-09-05 18:49:27"
         }
     ],
-    "packages-dev": [],
+    "packages-dev": [
+        {
+            "name": "kwn/php-rdkafka-stubs",
+            "version": "0.0.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kwn/php-rdkafka-stubs.git",
+                "reference": "b200174503c907f5ea59478de95937316ec5e5a0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/kwn/php-rdkafka-stubs/zipball/b200174503c907f5ea59478de95937316ec5e5a0",
+                "reference": "b200174503c907f5ea59478de95937316ec5e5a0",
+                "shasum": ""
+            },
+            "require": {
+                "ext-rdkafka": "*"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.8"
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Karol Wnuk",
+                    "email": "k.wnuk@ascetic.pl"
+                }
+            ],
+            "description": "Rdkafka extension stubs for your IDE",
+            "time": "2016-09-19 19:48:57"
+        }
+    ],
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": [],
