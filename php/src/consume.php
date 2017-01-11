@@ -58,7 +58,7 @@ $topicConf->set('auto.offset.reset', 'smallest');
 // Set the configuration to use for subscribed/assigned topics
 $conf->setDefaultTopicConf($topicConf);
 
-$consumer = new \RdKafka\KafkaConsumer($conf);
+$consumer = new AvroConsumer($conf, 'http://schemaregistry:8081');
 
 // Subscribe to topic 'test'
 $consumer->subscribe(['members']);
@@ -70,13 +70,6 @@ while (true) {
     $message = $consumer->consume(1000);
     switch ($message->err) {
         case RD_KAFKA_RESP_ERR_NO_ERROR:
-            $io = new AvroStringIO($message->payload);
-
-            $reader = new AvroIODatumReader($schema);
-            $dataReader = new AvroDataIOReader($io, $reader);
-
-            $message->payload = $dataReader->data();
-
             var_dump($message);
             break;
         case RD_KAFKA_RESP_ERR__PARTITION_EOF:

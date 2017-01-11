@@ -31,12 +31,15 @@ $topic = new AvroProducer($kafka->newTopic('members'), 'http://schemaregistry:80
 
 $nb = isset($argv[1]) ? $argv[1] : 1;
 
+$start = microtime(true);
 for ($i = 0; $i < $nb ; $i++) {
     $topic->produce(RD_KAFKA_PARTITION_UA, 0, $jose);
     $topic->produce(RD_KAFKA_PARTITION_UA, 0, $maria);
 }
 
-echo "Published\n";
+$end = microtime(true);
+
+echo "Published: ".($end - $start)."\n";
 
 /*
 

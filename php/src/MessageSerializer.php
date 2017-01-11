@@ -79,4 +79,47 @@ class MessageSerializer
 
         return $this->encodeRecordWithSchemaId($schemaId, $record, $isKey);
     }
+
+    /**
+     * Decode a message from kafka that has been encoded for use with the schema registry.
+     *
+     * @param string $message
+     *
+     * @return array
+     */
+    public function decodeMessage($message)
+    {
+        if (strlen($message) <= 5) {
+            throw new \RuntimeException('Message is too small to decode');
+        }
+
+        $io = new AvroStringIO($message);
+
+        $parsed = unpack('cmagic/Nid', $io->read(5));
+
+        if (static::MAGIC_BYTE !== $parsed['magic']) {
+            throw new \RuntimeException('Message does not start with magic byte');
+        }
+
+        $decoder = $this->getDecoder($parsed['id']);
+
+        return $decoder($io);
+    }
+
+    private function getDecoder($schemaId)
+    {
+        if (isset($this->idToDecoderFunc[$schemaId])) {
+            return $this->idToDecoderFunc[$schemaId];
+        }
+
+        $schema = $this->registry->getById($schemaId);
+
+        $reader = new AvroIODatumReader($schema);
+
+        $this->idToDecoderFunc[$schemaId] = function(AvroIO $io) use ($reader) {
+            return $reader->read(new AvroIOBinaryDecoder($io));
+        };
+
+        return $this->idToDecoderFunc[$schemaId];
+    }
 }
