@@ -19,6 +19,10 @@ _JSON
 
 $schema = AvroSchema::parse($schema);
 
+$registry = new CachedSchemaRegistryClient('http://schemaregistry:8081');
+var_dump($registry->register('members', $schema));
+exit;
+
 $jose = ['id' => 1392, 'name' => 'Jose'];
 $maria = ['id' => 1642, 'name' => 'Maria'];
 $data = [$jose, $maria];

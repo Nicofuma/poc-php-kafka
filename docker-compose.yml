@@ -12,6 +12,7 @@ services:
     working_dir: /data
     depends_on:
       - kafka
+      - schemaregistry
     networks:
       - default
 
@@ -34,5 +35,13 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
       - zookeeper
+    networks:
+      - default
+
+  schemaregistry:
+    image: confluent/schema-registry
+    depends_on:
+      - zookeeper
+      - kafka
     networks:
       - default

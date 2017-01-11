@@ -10,7 +10,8 @@
     "require": {
         "php": ">=7.1.0",
         "ext-rdkafka": "^3.0",
-        "wikimedia/avro": "^1.7"
+        "wikimedia/avro": "^1.7",
+        "guzzle/guzzle": "^3.9"
     },
     "require-dev": {
     }
