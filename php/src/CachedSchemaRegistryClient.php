@@ -167,7 +167,6 @@ class CachedSchemaRegistryClient
             $cache[$subject] = new \SplObjectStorage();
         }
 
-        $subCache = $cache[$subject];
-        $subCache[$subCache] = $value;
+        $cache[$subject][$schema] = $value;
     }
 }
