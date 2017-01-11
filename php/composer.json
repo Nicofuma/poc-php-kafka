@@ -1,0 +1,17 @@
+{
+    "name": "nicofuma/poc-kafka-avro",
+    "license": "proprietary",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "": "src/"
+        }
+    },
+    "require": {
+        "php": ">=7.1.0",
+        "ext-rdkafka": "^3.0",
+        "wikimedia/avro": "^1.7"
+    },
+    "require-dev": {
+    }
+}

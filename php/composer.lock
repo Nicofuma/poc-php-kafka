@@ -1,0 +1,89 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "hash": "e71932e86ff0d012505afc5bba50b9fb",
+    "content-hash": "27b084d43912644d9809620ca7a1b82e",
+    "packages": [
+        {
+            "name": "wikimedia/avro",
+            "version": "v1.7.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/wikimedia/avro-php.git",
+                "reference": "b642da9fd895aab7cb3261a22624228115471f47"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/wikimedia/avro-php/zipball/b642da9fd895aab7cb3261a22624228115471f47",
+                "reference": "b642da9fd895aab7cb3261a22624228115471f47",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "require-dev": {
+                "jakub-onderka/php-parallel-lint": "^0.9",
+                "phpunit/phpunit": "^4.0.0"
+            },
+            "suggest": {
+                "ext-gmp": "Large integer support for 32-bit platforms."
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "lib/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Glaesemann",
+                    "email": "grzm@seespotcode.net"
+                },
+                {
+                    "name": "Andy Wick",
+                    "email": "awick@purple.org"
+                },
+                {
+                    "name": "Saleem Shafi",
+                    "email": "saleemshafi@gmail.com"
+                },
+                {
+                    "name": "A B",
+                    "email": "abawany@x.com"
+                },
+                {
+                    "name": "Doug Cutting",
+                    "email": "cutting@apache.org"
+                },
+                {
+                    "name": "Tom White",
+                    "email": "tom@cloudera.com"
+                }
+            ],
+            "description": "A library for using Apache Avro with PHP.",
+            "homepage": "https://avro.apache.org/",
+            "keywords": [
+                "serialization"
+            ],
+            "time": "2015-09-05 18:49:27"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": {
+        "php": ">=7.1.0",
+        "ext-rdkafka": "^3.0"
+    },
+    "platform-dev": []
+}
