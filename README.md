@@ -8,8 +8,10 @@ Usage
 
 - `docker-compose up -d` To start kafka and zookeeper
 - `docker-compose exec kafka kafka-topics.sh --create --zookeeper zookeeper --replication-factor 1 --partitions 5 --topic members`
-- `docker-compose run --rm php php src/produce.php <nb messages>` To produce one or more messages
-- `docker-compose run --rm php php src/consume.php` To launch a consumer
+- `docker-compose run --rm java java -jar producer/target/java-producer-1.0-SNAPSHOT-jar-with-dependencies.jar <nb messages> http://schemaregistry:8081` To produce one oo more messages with java
+- `docker-compose run --rm java java -jar consumer/target/java-consumer-1.0-SNAPSHOT-jar-with-dependencies.jar http://schemaregistry:8081` To launch a java consumer
+- `docker-compose run --rm php php src/produce.php <nb messages>` To produce one or more messages with PHP
+- `docker-compose run --rm php php src/consume.php` To launch a PHP consumer
 - `docker-compose down --remove-orphans -v` To stop everything
 
 Note: All consumers are created in the same group and consume the same topic. It means that a message won't be consumed twice by these consumers.

@@ -2,37 +2,21 @@
 
 require __DIR__.'/../vendor/autoload.php';
 
-$schema = '';
-
-$schema = <<<_JSON
-{
-    "name": "member",
-    "type": "record",
-    "fields":
-    [
-        {"name": "id", "type": "int"},
-        {"name": "name", "type": "string"}
-    ]
-}
-_JSON
-;
-
-$schema = AvroSchema::parse($schema);
-
 $conf = new \RdKafka\Conf();
 
 // Set a rebalance callback to log partition assignments (optional)
 $conf->setRebalanceCb(function (\RdKafka\KafkaConsumer $kafka, $err, array $partitions = null) {
     switch ($err) {
         case RD_KAFKA_RESP_ERR__ASSIGN_PARTITIONS:
-            echo "Assign: ";
-            var_dump($partitions);
+            //echo "Assign: ";
+            //var_dump($partitions);
+            echo "Reading topic:page_visits\n";
             $kafka->assign($partitions);
             break;
 
         case RD_KAFKA_RESP_ERR__REVOKE_PARTITIONS:
-            echo "Revoke: ";
-            var_dump($partitions);
+            //echo "Revoke: ";
+            //var_dump($partitions);
             $kafka->assign(NULL);
             break;
 
@@ -43,7 +27,7 @@ $conf->setRebalanceCb(function (\RdKafka\KafkaConsumer $kafka, $err, array $part
 
 // Configure the group.id. All consumer with the same group.id will consume
 // different partitions.
-$conf->set('group.id', 'group1');
+$conf->set('group.id', 'SimpleConsumerExample');
 
 // Initial list of Kafka brokers
 $conf->set('metadata.broker.list', 'kafka:9092');
@@ -61,7 +45,7 @@ $conf->setDefaultTopicConf($topicConf);
 $consumer = new AvroConsumer($conf, 'http://schemaregistry:8081');
 
 // Subscribe to topic 'test'
-$consumer->subscribe(['members']);
+$consumer->subscribe(['page_visits']);
 
 echo "Waiting for partition assignment... (make take some time when\n";
 echo "quickly re-joining the group after leaving it.)\n";
@@ -70,13 +54,13 @@ while (true) {
     $message = $consumer->consume(1000);
     switch ($message->err) {
         case RD_KAFKA_RESP_ERR_NO_ERROR:
-            var_dump($message);
+            echo json_encode($message->payload)."\n";
             break;
         case RD_KAFKA_RESP_ERR__PARTITION_EOF:
-            echo "No more messages; will wait for more\n";
+            //echo "No more messages; will wait for more\n";
             break;
         case RD_KAFKA_RESP_ERR__TIMED_OUT:
-            echo "Timed out\n";
+            //echo "Timed out\n";
             break;
         default:
             throw new \Exception($message->errstr(), $message->err);

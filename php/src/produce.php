@@ -6,12 +6,14 @@ $schema = '';
 
 $schema = <<<_JSON
 {
+    "namespace": "example.avro",
     "name": "member",
     "type": "record",
     "fields":
     [
-        {"name": "id", "type": "int"},
-        {"name": "name", "type": "string"}
+        {"name": "time", "type": "long"},
+        {"name": "site", "type": "string"},
+        {"name": "ip", "type": "string"}
     ]
 }
 _JSON
@@ -19,27 +21,26 @@ _JSON
 
 $schema = AvroSchema::parse($schema);
 
-$jose = ['id' => 1392, 'name' => 'Jose'];
-$maria = ['id' => 1642, 'name' => 'Maria'];
-$data = [$jose, $maria];
-
 $kafka = new \RdKafka\Producer();
 $kafka->setLogLevel(LOG_DEBUG);
 $kafka->addBrokers('kafka');
 
-$topic = new AvroProducer($kafka->newTopic('members'), 'http://schemaregistry:8081', null, $schema);
+$topic = new AvroProducer($kafka->newTopic('page_visits'),'http://schemaregistry:8081', null, $schema);
 
 $nb = isset($argv[1]) ? $argv[1] : 1;
 
 $start = microtime(true);
 for ($i = 0; $i < $nb ; $i++) {
-    $topic->produce(RD_KAFKA_PARTITION_UA, 0, $jose);
-    $topic->produce(RD_KAFKA_PARTITION_UA, 0, $maria);
+    $topic->produce(RD_KAFKA_PARTITION_UA, 0, [
+        'time' => time(),
+        'site' => 'www.example.com',
+        'ip' => '192.168.2.'.mt_rand(0, 255),
+    ]);
 }
 
 $end = microtime(true);
 
-echo "Published: ".($end - $start)."\n";
+echo 'Published: '.($end - $start)."\n";
 
 /*
 

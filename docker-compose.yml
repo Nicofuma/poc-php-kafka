@@ -16,6 +16,17 @@ services:
     networks:
       - default
 
+  java:
+    image: java
+    volumes:
+      - ./java:/data
+    working_dir: /data
+    depends_on:
+      - kafka
+      - schemaregistry
+    networks:
+      - default
+
   python:
     build:
       context: docker/python
