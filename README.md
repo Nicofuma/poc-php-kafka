@@ -7,7 +7,7 @@ Usage
 -----
 
 - `docker-compose up -d` To start kafka and zookeeper
-- `docker-compose exec kafka kafka-topics.sh --create --zookeeper zookeeper --replication-factor 1 --partitions 5 --topic members`
+- `docker-compose exec kafka kafka-topics.sh --create --zookeeper zookeeper --replication-factor 1 --partitions 5 --topic page_visits`
 - `docker-compose run --rm java java -jar producer/target/java-producer-1.0-SNAPSHOT-jar-with-dependencies.jar <nb messages> http://schemaregistry:8081` To produce one oo more messages with java
 - `docker-compose run --rm java java -jar consumer/target/java-consumer-1.0-SNAPSHOT-jar-with-dependencies.jar http://schemaregistry:8081` To launch a java consumer
 - `docker-compose run --rm php php src/produce.php <nb messages>` To produce one or more messages with PHP

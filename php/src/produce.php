@@ -25,17 +25,20 @@ $kafka = new \RdKafka\Producer();
 $kafka->setLogLevel(LOG_DEBUG);
 $kafka->addBrokers('kafka');
 
-$topic = new AvroProducer($kafka->newTopic('page_visits'),'http://schemaregistry:8081', null, $schema);
+$topic = new AvroProducer($kafka->newTopic('page_visits'),'http://schemaregistry:8081', null, $schema, ['register_missing_schemas' => true]);
 
 $nb = isset($argv[1]) ? $argv[1] : 1;
 
 $start = microtime(true);
 for ($i = 0; $i < $nb ; $i++) {
+    $format = mt_rand(0, 2);
+    $format = $format === 2 ? null : $format;
+
     $topic->produce(RD_KAFKA_PARTITION_UA, 0, [
         'time' => time(),
         'site' => 'www.example.com',
         'ip' => '192.168.2.'.mt_rand(0, 255),
-    ]);
+    ], null, null, null, $format);
 }
 
 $end = microtime(true);

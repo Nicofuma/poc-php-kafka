@@ -42,7 +42,7 @@ $topicConf->set('auto.offset.reset', 'smallest');
 // Set the configuration to use for subscribed/assigned topics
 $conf->setDefaultTopicConf($topicConf);
 
-$consumer = new AvroConsumer($conf, 'http://schemaregistry:8081');
+$consumer = new AvroConsumer($conf, 'http://schemaregistry:8081', ['register_missing_schemas' => false]);
 
 // Subscribe to topic 'test'
 $consumer->subscribe(['page_visits']);

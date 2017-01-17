@@ -14,10 +14,19 @@ class CachedSchemaRegistryClient
 
     private $client;
 
-    /** @var SplObjectStorage[] */
+    /* Schemas by Ids */
+    /** @var SplObjectStorage[]|int[][] */
     private $subjectToSchemaIds = [];
+
+    /** @var AvroSchema[] */
     private $idToSchema = [];
+
+    /** @var SplObjectStorage[]|int[][] */
     private $subjectToSchemaVersions = [];
+
+    /* Schemas by Version */
+    /** @var AvroSchema[][] */
+    private $subjectVersionToSchema = [];
 
     /**
      * @param string $url
@@ -58,9 +67,9 @@ class CachedSchemaRegistryClient
         list($status, $response) = $this->sendRequest($url, 'POST', json_encode(['schema' => (string) $schema]));
 
         if ($status === 409) {
-            throw new RuntimeException('Incompatible Avro schema');
+            throw new \RuntimeException('Incompatible Avro schema');
         } else if ($status === 422) {
-            throw new RuntimeException('Invalid Avro schema');
+            throw new \RuntimeException('Invalid Avro schema');
         } else if (!($status >= 200 || $status < 300)) {
             throw new \RuntimeException('Unable to register schema. Error code: '.$status);
         }
@@ -69,6 +78,59 @@ class CachedSchemaRegistryClient
         $this->cacheSchema($schema, $schemaId, $subject);
 
         return $schemaId;
+    }
+
+    /**
+     * Returns the version of a registered schema
+     *
+     * @param string $subject
+     * @param AvroSchema $schema
+     *
+     * @return int
+     */
+    public function getSchemaVersion($subject, AvroSchema $schema)
+    {
+        if (!isset($this->subjectToSchemaVersions[$subject][$schema])) {
+            $this->cacheSchemaDetails($subject, $schema);
+        }
+
+        return $this->subjectToSchemaVersions[$subject][$schema];
+    }
+
+    /**
+     * Returns the id of a registered schema
+     *
+     * @param string $subject
+     * @param AvroSchema $schema
+     *
+     * @return int
+     */
+    public function getSchemaId($subject, AvroSchema $schema)
+    {
+        if (!isset($this->subjectToSchemaVersions[$subject][$schema])) {
+            $this->cacheSchemaDetails($subject, $schema);
+        }
+
+        return $this->subjectToSchemaIds[$subject][$schema];
+    }
+
+    /**
+     * Fetch and caches the details of a schema
+     *
+     * @param string $subject
+     * @param AvroSchema $schema
+     */
+    protected function cacheSchemaDetails($subject, AvroSchema $schema)
+    {
+        $url = sprintf('/subjects/%s', $subject);
+        list($status, $response) = $this->sendRequest($url, 'POST', json_encode(['schema' => (string) $schema]));
+        if (!($status >= 200 || $status < 300)) {
+            throw new \RuntimeException('Unable to get schema details. Error code: '.$status);
+        }
+
+        $response['schema'] = $schema;
+
+        $this->cacheSchema($response['schema'], $response['id'], $response['subject'], $response['version']);
     }
 
     /**
@@ -97,6 +159,28 @@ class CachedSchemaRegistryClient
         $schema = AvroSchema::parse($response['schema']);
 
         $this->cacheSchema($schema, $schemaId);
+
+        return $schema;
+    }
+
+    public function getBySubjectAndVersion($subject, $version)
+    {
+        if (isset($this->subjectVersionToSchema[$subject][$version])) {
+            return $this->subjectVersionToSchema[$subject][$version];
+        }
+
+        $url = sprintf('/subjects/%s/versions/%d', $subject, $version);
+        list($status, $response) = $this->sendRequest($url, 'GET');
+
+        if ($status === 404) {
+            throw new RuntimeException('Schema not found');
+        } else if (!($status >= 200 || $status < 300)) {
+            throw new \RuntimeException('Unable to get schema for the specific ID: '.$status);
+        }
+
+        $schema = AvroSchema::parse($response['schema']);
+
+        $this->cacheSchemaDetails($subject, $schema);
 
         return $schema;
     }
@@ -150,6 +234,12 @@ class CachedSchemaRegistryClient
             $this->addToCache($this->subjectToSchemaIds, $subject, $schema, $schemaId);
 
             if ($version) {
+                if (!isset($this->subjectVersionToSchema[$subject])) {
+                    $this->subjectVersionToSchema[$subject] = [];
+                }
+
+                $this->subjectVersionToSchema[$subject][$version] = $schema;
+
                 $this->addToCache($this->subjectToSchemaVersions, $subject, $schema, $version);
             }
         }
