@@ -10,7 +10,7 @@ use RdKafka\KafkaConsumer;
 class AvroConsumer extends KafkaConsumer
 {
     /** @var MessageSerializer */
-    private $serializer;
+    protected $serializer;
 
     public function __construct(Conf $conf, $registryUrl, $options = [])
     {
