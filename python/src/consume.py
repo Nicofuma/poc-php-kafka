@@ -5,7 +5,10 @@ from confluent_kafka.avro import AvroConsumer
 from confluent_kafka.avro.serializer import SerializerError
 
 c = AvroConsumer({'bootstrap.servers': 'kafka:9092', 'group.id': 'group1', 'schema.registry.url': 'http://schemaregistry:8081'})
-c.subscribe(['members'])
+topic = 'page_visits'
+c.subscribe([topic])
+
+print("Starting to consume kafka topic {t}".format(t=topic))
 running = True
 while running:
     try:
