@@ -7,7 +7,7 @@ from confluent_kafka.avro.serializer import SerializerError
 
 c = AvroConsumer({
     'bootstrap.servers': 'kafka:9092',
-    'group.id': 'group1',
+    'group.id': 'SimpleConsumerExample',
     'schema.registry.url': 'http://schemaregistry:8081',
 })
 topic = 'page_visits'
