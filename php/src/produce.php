@@ -7,7 +7,7 @@ $schema = '';
 $schema = <<<_JSON
 {
     "namespace": "example.avro",
-    "name": "member",
+    "name": "page_visit",
     "type": "record",
     "fields":
     [
