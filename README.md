@@ -13,6 +13,7 @@ Usage
 - `docker-compose run --rm php php src/produce.php <nb messages>` To produce one or more messages with PHP
 - `docker-compose run --rm php php src/consume.php` To launch a PHP consumer
 - `docker-compose run --rm python python src/consume.py` To launch a Python consumer
+- `docker-compose run --rm python python src/consume_raw.py` To launch a Python consumer for raw Kafka messages (without Avro deserialization)
 - `docker-compose down --remove-orphans -v` To stop everything
 
 Note: All consumers are created in the same group and consume the same topic. It means that a message won't be consumed twice by these consumers.

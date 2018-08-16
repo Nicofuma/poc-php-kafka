@@ -13,11 +13,11 @@ c = AvroConsumer({
 topic = 'page_visits'
 c.subscribe([topic])
 
-print("Starting to consume kafka topic {t}".format(t=topic))
+print("Starting to consume kafka topic {t!r}".format(t=topic))
 
 with contextlib.closing(c):
     while True:
-        msg = c.poll(10)
+        msg = c.poll(1)
         if msg:
             if not msg.error():
                 print(msg.value())
