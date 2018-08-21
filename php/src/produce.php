@@ -7,7 +7,7 @@ $schema = '';
 $schema = <<<_JSON
 {
     "namespace": "example.avro",
-    "name": "member",
+    "name": "page_visit",
     "type": "record",
     "fields":
     [
@@ -25,9 +25,11 @@ $kafka = new \RdKafka\Producer();
 $kafka->setLogLevel(LOG_DEBUG);
 $kafka->addBrokers('kafka');
 
-$topic = new AvroProducer($kafka->newTopic('page_visits'),'http://schemaregistry:8081', null, $schema, ['register_missing_schemas' => true]);
-
+$topic = 'page_visits';
 $nb = isset($argv[1]) ? $argv[1] : 1;
+
+echo "Producing $nb messages to kafka topic '$topic'\n";
+$topic = new AvroProducer($kafka->newTopic($topic),'http://schemaregistry:8081', null, $schema, ['register_missing_schemas' => true]);
 
 $start = microtime(true);
 for ($i = 0; $i < $nb ; $i++) {
